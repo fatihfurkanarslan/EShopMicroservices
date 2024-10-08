@@ -7,7 +7,7 @@ namespace Catalog.API.Products.DeleteProduct;
 
     public record DeleteProductResult(bool isSuccess);
 
-internal class DeleteProductHandler(IDocumentSession session, ILogger logger) : ICommandHandler<DeleteProductCommand, DeleteProductResult>
+internal class DeleteProductHandler(IDocumentSession session, ILogger<DeleteProductHandler> logger) : ICommandHandler<DeleteProductCommand, DeleteProductResult>
 {
     public async Task<DeleteProductResult> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
     {
@@ -17,7 +17,7 @@ internal class DeleteProductHandler(IDocumentSession session, ILogger logger) : 
             throw new ProductNotFoundException();
         }
 
-        session.Delete(command.Id);
+        session.Delete<Product>(command.Id);
         await session.SaveChangesAsync(cancellationToken);
 
         return new DeleteProductResult(true);
